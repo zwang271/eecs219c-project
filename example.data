@@ -1,5 +1,5 @@
 data alphabet := a | b | c 
 
-positive example e1 := a b a b 
-positive example e2 := a b c
+positive example e1 := a b c
+positive example e2 := a b c b
 positive example e3 := a b a

@@ -226,14 +226,9 @@ def get_negative_examples(pattern, max_len, data: PatternData):
 
     params = {"S": S, "Sigma": Sigma, "sort": sort, "is_var": is_var}    
 
-    negatives = []
-    for w in get_concats(alphabet, max_len):
-        # s = [[str(char) for char in w]]
-        if not subset([list(w)], pattern, params):
-            negatives.append(w)
-        else:
-            print("found positive", w)
-            pass
+    concats = get_concats(alphabet, max_len)
+    negatives = get_subset(concats, pattern, params)
+
     return negatives
 
 
@@ -260,7 +255,9 @@ if __name__ == "__main__":
             output = replace(output, y, x)
         return output
 
+
     pattern = normalize(pattern)
+
 
     times[1] = time.time()
     singles = find_singles(data, pattern)
@@ -278,6 +275,8 @@ if __name__ == "__main__":
             kind = restricted[x] if x in restricted else f"{data.sort}"
             annotation.append(f"{x} ∈ {kind}" if single else f"{x} ∈ {kind}⁺")
 
+    nodotpattern = pattern
+    print("No dot pattern:", nodotpattern)
     pattern = "⋅".join(pattern)
     annotation = " ∧ ".join(annotation)
 
@@ -289,5 +288,5 @@ if __name__ == "__main__":
     print(stats)
     # print(get_concats(["a", "b", "c"], 4)) #test: Amar
 
-    negatives = get_negative_examples(pattern, max_len=5, data=data)
+    negatives = get_negative_examples(nodotpattern, max_len=5, data=data)
     [print(w[:20]) for w in negatives]
