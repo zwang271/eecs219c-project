@@ -226,9 +226,27 @@ def get_negative_examples(pattern, max_len, data: PatternData):
 
     params = {"S": S, "Sigma": Sigma, "sort": sort, "is_var": is_var}    
 
-    concats = get_concats(alphabet, max_len)
-    negatives = get_subset(concats, pattern, params)
+    if max_exPerClass == math.inf:
+        concats = get_concats(alphabet, max_len)
+        negatives = get_subset(concats, pattern, params) 
+        return negatives  
 
+    negatives = []
+    for i in range(2, max_len+1):
+        count = 0
+        for w in get_concats_exact(alphabet, i):
+            if count > max_exPerClass:
+                break
+
+            if not member(list(w), pattern, params):
+                negatives.append(w)
+                count += 1
+                if verbose: 
+                    print("found negative", w)
+            else:
+                if verbose:
+                    print("found positive", w)
+                pass
     return negatives
 
 
